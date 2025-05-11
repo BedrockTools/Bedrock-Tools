@@ -1,0 +1,9 @@
+[submodule "src-deps/webview"]
+	path = src-deps/webview
+	url = https://github.com/BedrockTools/webview
+[submodule "src-deps/bgfx"]
+	path = src-deps/bgfx
+	url = https://github.com/bkaradzic/bgfx.cmake
+[submodule "src-deps/imgui/imgui"]
+	path = src-deps/imgui/imgui
+	url = https://github.com/ocornut/imgui
