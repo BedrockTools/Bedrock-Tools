@@ -2,3 +2,7 @@
 /build
 /out
 /vcpkg_installed
+
+/.idea/*
+!/.idea/misc.xml
+!/.idea/icon.png

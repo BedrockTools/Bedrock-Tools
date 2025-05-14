@@ -91,7 +91,7 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/src-deps/bgfx")
 
 set(COPYRIGHT "Copyright 2025, xKingDark")
 set(VENDOR "xKingDark")
-set(DESCRIPTION "Hello, world!")
+set(DESCRIPTION "Bedrock Tools")
 set(SHARED_SOURCES)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -116,7 +116,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 if (WIN32)
-    target_link_libraries(${NAME} PRIVATE d3d11)
+    target_link_libraries(${NAME} PRIVATE d3d11 d3d12)
 endif()
 
 set(SRC_ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)

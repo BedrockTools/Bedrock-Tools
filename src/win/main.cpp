@@ -1,6 +1,8 @@
 #include <windows.h>
 #include <iostream>
 #include <thread>
+#include <fstream>
+#include <vector>
 
 #include "../common/MainWindow.hpp"
 #include <webview/webview.h>
@@ -31,7 +33,7 @@ static LRESULT CALLBACK WebViewProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM 
         case WM_KEYDOWN:
         {
             std::cout << "Meow!" << std::endl;
-            switch (wParam)
+            /*switch (wParam)
             {
                 case VK_F11:
                 {
@@ -42,8 +44,33 @@ static LRESULT CALLBACK WebViewProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM 
                     g_MainWindow.setFullScreen(!g_MainWindow.isFullScreen());
                     break;
                 };
-            };
+            };*/
 
+            break;
+        };
+    };
+
+    return 0;
+};
+
+static LRESULT CALLBACK WidgetProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (iMsg)
+    {
+        default:
+            return webview::browser_engine::widget_proc_handler(hWnd, iMsg, wParam, lParam);
+
+        case WM_SETFOCUS:
+        case WM_KILLFOCUS:
+        {
+            bool isFocused = iMsg == WM_SETFOCUS;
+            break;
+        };
+
+        case WM_KEYUP:
+        case WM_KEYDOWN:
+        {
+            std::cout << "Meow!" << std::endl;
             break;
         };
     };
@@ -68,7 +95,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }).detach();
 #endif
 
-    webview::webview webView{ false, nullptr, WebViewProc };
+    webview::webview webView{ true, nullptr, WebViewProc, WidgetProc };
 
     void* pWidget = webView.widget().value();
     void* pWindow = webView.window().value();
@@ -76,8 +103,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     try {
         webView.set_title(g_WindowClassName);
+        webView.set_size(800, 600, WEBVIEW_HINT_MIN);
         webView.set_size(800, 600, WEBVIEW_HINT_NONE);
-        webView.set_html(R"html(<div style="color: black;">Webview! qwq</div>)html");
+
+        /*std::ifstream file("./data/ui/index.html", std::ios::in);
+        webView.set_html(std::string(
+            (std::istreambuf_iterator<char>(file)),
+            std::istreambuf_iterator<char>()
+        ));*/
+        
+        //webView.set_html(R"html(<div style="color: black;">Webview! qwq</div>)html");
 
         g_MainWindow.initialize(hWnd, 800, 600);
 
@@ -134,21 +169,35 @@ static LRESULT CALLBACK WindowProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM l
 
     switch (iMsg)
     {
-    default:
-        return DefWindowProc(hWnd, iMsg, wParam, lParam);
+        default:
+            return DefWindowProc(hWnd, iMsg, wParam, lParam);
 
-    case WM_SIZE:
-    {
-        if (wParam != SIZE_MINIMIZED)
+        case WM_SIZE:
         {
-            g_ResizeWidth = (UINT)LOWORD(lParam);
-            g_ResizeHeight = (UINT)HIWORD(lParam);
+            if (wParam != SIZE_MINIMIZED)
+            {
+                g_ResizeWidth = (UINT)LOWORD(lParam);
+                g_ResizeHeight = (UINT)HIWORD(lParam);
+            };
+            break;
         };
-        break;
-    };
 
-    case WM_DESTROY:
-        PostQuitMessage(0); break;
+        case WM_SETFOCUS:
+        case WM_KILLFOCUS:
+        {
+            bool isFocused = iMsg == WM_SETFOCUS;
+            break;
+        };
+
+        case WM_KEYUP:
+        case WM_KEYDOWN:
+        {
+            std::cout << "Meow!" << std::endl;
+            break;
+        };
+
+        case WM_DESTROY:
+            PostQuitMessage(0); break;
     };
 
     return 0;

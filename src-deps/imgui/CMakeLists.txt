@@ -23,6 +23,8 @@ elseif(WIN32)
     )
 endif()
 
+target_link_libraries(imgui PRIVATE d3dcompiler dwmapi)
+
 target_include_directories(imgui PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui>
     $<INSTALL_INTERFACE:include>
