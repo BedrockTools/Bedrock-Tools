@@ -4,7 +4,8 @@
 #include <fstream>
 #include <vector>
 
-#include "../common/MainWindow.hpp"
+#include "src/common/MainWindow.hpp"
+#include "../common/rendering/DirectX11.hpp"
 #include <webview/webview.h>
 
 #if DEBUG_BUILD
@@ -99,13 +100,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     void* pWidget = webView.widget().value();
     void* pWindow = webView.window().value();
-    auto hWnd = reinterpret_cast<HWND>(pWindow);
+    auto hWnd = static_cast<HWND>(pWindow);
 
     try {
         webView.set_title(g_WindowClassName);
         webView.set_size(800, 600, WEBVIEW_HINT_MIN);
         webView.set_size(800, 600, WEBVIEW_HINT_NONE);
 
+        webView.navigate("http://127.0.0.1:56729/");
         /*std::ifstream file("./data/ui/index.html", std::ios::in);
         webView.set_html(std::string(
             (std::istreambuf_iterator<char>(file)),
@@ -151,7 +153,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     };
 
 _cleanup:
-    g_MainWindow.terminate();
+    MainWindow::terminate();
     webView.terminate();
 
     std::cout << "Quit correctly." << std::endl;
@@ -176,8 +178,8 @@ static LRESULT CALLBACK WindowProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM l
         {
             if (wParam != SIZE_MINIMIZED)
             {
-                g_ResizeWidth = (UINT)LOWORD(lParam);
-                g_ResizeHeight = (UINT)HIWORD(lParam);
+                g_ResizeWidth = static_cast<UINT>(LOWORD(lParam));
+                g_ResizeHeight = static_cast<UINT>(HIWORD(lParam));
             };
             break;
         };
@@ -226,10 +228,10 @@ static void DebugWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, bool* bIsD
         WS_SYSMENU,
         CW_USEDEFAULT, CW_USEDEFAULT, /* position */
         350, 550, /* size */
-        NULL,
-        NULL,
+        nullptr,
+        nullptr,
         hInstance,
-        NULL
+        nullptr
     );
 
     // Initialize Direct3D
@@ -293,7 +295,6 @@ static void DebugWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, bool* bIsD
         ImGui_ImplDX11_NewFrame();
         ImGui::NewFrame();
         {
-            ImGuiIO& io = ImGui::GetIO();
             if (ImGui::BeginMainMenuBar())
             {
                 if (ImGui::BeginMenu("Settings"))
@@ -311,7 +312,7 @@ static void DebugWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, bool* bIsD
                     if (ImGui::MenuItem("Crash Client"))
                     {
                         std::cout << "Meow!~" << std::endl;
-                        volatile int* a = reinterpret_cast<volatile int*>(0xDEADC0DE);
+                        const auto a = reinterpret_cast<volatile int*>(0xDEADC0DE);
                         *a = 1;
                     };
 
@@ -337,7 +338,7 @@ static void DebugWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, bool* bIsD
         // Rendering
         ImGui::Render();
 
-        static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        static auto clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
         const float clear_color_with_alpha[4] = {
             clear_color.x * clear_color.w,
             clear_color.y * clear_color.w,
@@ -350,7 +351,7 @@ static void DebugWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, bool* bIsD
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
         // Present
-        HRESULT hr = g_pSwapChain->Present(g_MainWindow.isVsyncEnabled(), 0);
+        const HRESULT hr = g_pSwapChain->Present(g_MainWindow.isVsyncEnabled(), 0);
         g_SwapChainOccluded = (hr == DXGI_STATUS_OCCLUDED);
     };
 

@@ -10,20 +10,18 @@
 #include <bgfx/platform.h>
 #include <bx/platform.h>
 
-#include "rendering/DirectX11.hpp"
-
 class MainWindow
 {
 private:
-    int m_Width;
-    int m_Height;
+    int m_Width = 800;
+    int m_Height = 600;
     bool m_Vsync = false;
     bool m_FullScreen = false;
 
 public:
     void initialize(void*, int, int);
     void update(int, int);
-    void terminate();
+    static void terminate();
 
     std::string getWindowTitle() const;
 

@@ -2,10 +2,7 @@ file(GLOB_RECURSE ASSET_FILES "${SRC_ASSETS_DIR}/*")
 
 foreach(asset IN LISTS ASSET_FILES)
     # Skip ignored folders or files
-    if(
-        asset MATCHES "/assets/platform/" OR
-        asset MATCHES "/assets/shaders/"
-    )
+    if(asset MATCHES "/assets/shaders/")
         continue()
     endif()
 

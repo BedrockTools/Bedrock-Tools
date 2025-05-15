@@ -3,7 +3,10 @@
 #include <fstream>
 static std::vector<char> loadShader(const char* filename) {
     std::ifstream file(filename, std::ios::binary);
-    return std::vector<char>((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    return {
+        (std::istreambuf_iterator(file)),
+        std::istreambuf_iterator<char>()
+    };
 };
 
 inline const auto vs_shader = loadShader("assets/shaders/Test/Test.vertex.bin");
