@@ -75,6 +75,10 @@ endif()
 include_directories("${CMAKE_SOURCE_DIR}")
 include_directories("${CMAKE_SOURCE_DIR}/src-deps")
 
+# http-server
+add_subdirectory("${CMAKE_SOURCE_DIR}/src-deps/http-server")
+include_directories("${CMAKE_SOURCE_DIR}/src-deps/http-server/src")
+
 # Webview
 add_subdirectory("${CMAKE_SOURCE_DIR}/src-deps/webview")
 include_directories("${CMAKE_SOURCE_DIR}/src-deps/webview/core/include")

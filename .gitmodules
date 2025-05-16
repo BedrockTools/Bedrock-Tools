@@ -7,3 +7,6 @@
 [submodule "src-deps/imgui/imgui"]
 	path = src-deps/imgui/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "src-deps/http-server"]
+	path = src-deps/http-server
+	url = https://github.com/DarkGamerYT/http-server

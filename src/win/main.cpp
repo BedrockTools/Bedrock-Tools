@@ -1,11 +1,11 @@
-#include <windows.h>
+//#include <windows.h>
 #include <iostream>
 #include <thread>
 #include <fstream>
 #include <vector>
 
 #include "src/common/MainWindow.hpp"
-#include "../common/rendering/DirectX11.hpp"
+#include "src/common/rendering/DirectX11.hpp"
 #include <webview/webview.h>
 
 #if DEBUG_BUILD
@@ -89,12 +89,19 @@ LPCTSTR g_DebugClassName = TEXT("Bedrock Tools - Debug");
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+    Logger::s_File.open("Bedrock-Tools.log");
+    Logger::s_bShouldFormat = false;
     bool bIsDone = false;
+
 #if DEBUG_BUILD
     std::thread([&hInstance, &hPrevInstance, &bIsDone] {
         DebugWindow(hInstance, hPrevInstance, &bIsDone);
     }).detach();
 #endif
+
+    std::thread([] {
+        AppUI::serveHttp();
+    }).detach();
 
     webview::webview webView{ true, nullptr, WebViewProc, WidgetProc };
 
@@ -107,14 +114,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         webView.set_size(800, 600, WEBVIEW_HINT_MIN);
         webView.set_size(800, 600, WEBVIEW_HINT_NONE);
 
-        webView.navigate("http://127.0.0.1:56729/");
-        /*std::ifstream file("./data/ui/index.html", std::ios::in);
-        webView.set_html(std::string(
-            (std::istreambuf_iterator<char>(file)),
-            std::istreambuf_iterator<char>()
-        ));*/
-        
-        //webView.set_html(R"html(<div style="color: black;">Webview! qwq</div>)html");
+        webView.navigate("http://127.0.0.1:56729/index.html");
 
         g_MainWindow.initialize(hWnd, 800, 600);
 
@@ -153,6 +153,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     };
 
 _cleanup:
+    bIsDone = true;
+
     MainWindow::terminate();
     webView.terminate();
 
@@ -258,7 +260,7 @@ static void DebugWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, bool* bIsD
     ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
 
-    while (true)
+    while (!*bIsDone)
     {
         MSG msg;
         while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))

@@ -10,6 +10,8 @@
 #include <bgfx/platform.h>
 #include <bx/platform.h>
 
+#include "AppUI.hpp"
+
 class MainWindow
 {
 private:
