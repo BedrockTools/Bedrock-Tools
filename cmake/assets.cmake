@@ -7,13 +7,13 @@ foreach(asset IN LISTS ASSET_FILES)
     endif()
 
     # Get relative path
-    file(RELATIVE_PATH rel_path "${SRC_ASSETS_DIR}" "${asset}")
-    set(dst "${DST_ASSETS_DIR}/${rel_path}")
+    file(RELATIVE_PATH RELATIVE "${SRC_ASSETS_DIR}" "${asset}")
+    set(OUT "${OUT_ASSETS_DIR}/${RELATIVE}")
 
     # Make directory if needed
-    get_filename_component(dst_dir "${dst}" DIRECTORY)
-    file(MAKE_DIRECTORY "${dst_dir}")
+    get_filename_component(OUT_DIR "${OUT}" DIRECTORY)
+    file(MAKE_DIRECTORY "${OUT_DIR}")
 
     # Copy file
-    file(COPY "${asset}" DESTINATION "${dst_dir}")
+    file(COPY "${asset}" DESTINATION "${OUT_DIR}")
 endforeach()

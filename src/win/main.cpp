@@ -3,6 +3,7 @@
 #include <thread>
 #include <fstream>
 #include <vector>
+#include <cstdlib>
 
 #include "src/common/MainWindow.hpp"
 #include "src/common/rendering/DirectX11.hpp"
@@ -89,8 +90,20 @@ LPCTSTR g_DebugClassName = TEXT("Bedrock Tools - Debug");
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    Logger::s_File.open("Bedrock-Tools.log");
-    Logger::s_bShouldFormat = false;
+    const char* appData = std::getenv("APPDATA");
+    if (appData)
+    {
+        std::filesystem::path appFolder = std::filesystem::path(appData) / "com.xkingdark.bedrocktools";
+        if (!std::filesystem::exists(appFolder))
+            std::filesystem::create_directories(appFolder);
+
+        Logger::s_File.open(appFolder / "Bedrock-Tools.log");
+        Logger::s_bShouldFormat = false;
+
+        Logger::log(Logger::LogLevel::Debug,
+            std::format("AppData path: {}", appFolder.string()));
+    };
+
     bool bIsDone = false;
 
 #if DEBUG_BUILD

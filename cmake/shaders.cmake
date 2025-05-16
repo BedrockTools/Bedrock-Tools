@@ -3,7 +3,7 @@ function(compile_shader SHADER_PATH SHADER_TYPE)
     get_filename_component(SHADER_DIR "${SHADER_PATH}" DIRECTORY)
 
     file(RELATIVE_PATH SHADER_SUBDIR "${SRC_ASSETS_DIR}/shaders" "${SHADER_DIR}")
-    set(OUTPUT_PATH "${DST_ASSETS_DIR}/shaders/${SHADER_SUBDIR}/${SHADER_SUBDIR}.${SHADER_TYPE}.bin")
+    set(OUTPUT_PATH "${OUT_ASSETS_DIR}/shaders/${SHADER_SUBDIR}/${SHADER_SUBDIR}.${SHADER_TYPE}.bin")
 
     # Make directory if needed
     get_filename_component(OUT_DIR "${OUTPUT_PATH}" DIRECTORY)
@@ -19,6 +19,7 @@ function(compile_shader SHADER_PATH SHADER_TYPE)
         --profile s_5_0
         RESULT_VARIABLE result
     )
+
     if(NOT result EQUAL 0)
         message(FATAL_ERROR "Shaderc failed for ${SHADER}")
     endif()
