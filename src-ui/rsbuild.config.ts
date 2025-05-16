@@ -34,7 +34,7 @@ export default defineConfig({
             css: "assets",
             cssAsync: "assets/async",
             svg: "assets",
-            font: "assets",
+            font: "fonts",
             wasm: "assets",
             image: "assets",
             media: "assets",

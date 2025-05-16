@@ -101,8 +101,8 @@ void MainWindow::update(int width, int height)
     bgfx::setViewRect(0, 0, 0, this->m_Width, this->m_Height);
 
     bgfx::frame();
-    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0xFFFFFFFF, 1.0f, 0);
-    //bgfx::setViewClear(0, BGFX_CLEAR_COLOR, 0x000000FF, 1.0f, 0);
+    //bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0xFFFFFFFF, 1.0f, 0);
+    bgfx::setViewClear(0, BGFX_CLEAR_COLOR, 0xAFAFC8FF, 1.0f, 0);
     bgfx::touch(0);
 
     // Set the vertex and index buffers

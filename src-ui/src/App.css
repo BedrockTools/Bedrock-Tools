@@ -1,0 +1,25 @@
+body {
+    font-family: NotoSans;
+}
+
+/* Fonts */
+@font-face {
+    font-family: MinecraftFive;
+    src: url('../assets/fonts/MinecraftFive.otf');
+}
+@font-face {
+    font-family: MinecraftFiveBold;
+    src: url('../assets/fonts/MinecraftFiveBold.otf');
+}
+@font-face {
+    font-family: MinecraftSeven;
+    src: url('../assets/fonts/MinecraftSeven.otf');
+}
+@font-face {
+    font-family: MinecraftTen;
+    src: url('../assets/fonts/MinecraftTen.otf');
+}
+@font-face {
+    font-family: NotoSans;
+    src: url('../assets/fonts/NotoSans.otf');
+}
