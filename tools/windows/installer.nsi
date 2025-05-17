@@ -47,6 +47,9 @@ Section "Install"
     WriteRegStr HKCU "${UNINSTALL_REG_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
     WriteRegDWORD HKCU "${UNINSTALL_REG_KEY}" "NoModify" 1
     WriteRegDWORD HKCU "${UNINSTALL_REG_KEY}" "NoRepair" 1
+    
+    #ExecShell "open" "$INSTDIR\BedrockTools.exe"
+    #Quit
 SectionEnd
 
 Section "Uninstall"

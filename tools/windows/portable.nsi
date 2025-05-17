@@ -14,9 +14,7 @@ Section
   SetOutPath $INSTDIR
   File /r "..\..\build\release\bin\*.*"
 
-  Exec "$INSTDIR\BedrockTools.exe"
-
   # Cleanup after app exits
-  ExecWait "$INSTDIR\BedrockTools.exe"
+  ExecShellWait "open" "$INSTDIR\BedrockTools.exe"
   RMDir /r $INSTDIR
 SectionEnd
