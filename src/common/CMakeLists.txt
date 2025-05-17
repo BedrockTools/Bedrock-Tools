@@ -27,9 +27,9 @@ set(UI_OUT_DIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/data/ui")
 
 add_custom_command(
     TARGET ${NAME} PRE_BUILD
-    COMMAND bun run build
+    COMMAND npm run build
     WORKING_DIRECTORY ${UI_SOURCE_DIR}
-    COMMENT "Building UI with bun"
+    COMMENT "Building UI with npm"
 )
 
 add_custom_command(

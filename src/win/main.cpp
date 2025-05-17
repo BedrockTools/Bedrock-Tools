@@ -91,6 +91,7 @@ LPCTSTR g_DebugClassName = TEXT("Bedrock Tools - Debug");
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     const char* appData = std::getenv("APPDATA");
+    const char* localAppData = std::getenv("LOCALAPPDATA");
     if (appData)
     {
         std::filesystem::path appFolder = std::filesystem::path(appData) / "com.xkingdark.bedrocktools";
@@ -116,7 +117,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         AppUI::serveHttp();
     }).detach();
 
-    webview::webview webView{ true, nullptr, WebViewProc, WidgetProc };
+    webview::webview webView{
+        true, nullptr,
+        std::format("{}\\com.xkingdark.bedrocktools", localAppData),
+        WebViewProc, WidgetProc
+    };
 
     void* pWidget = webView.widget().value();
     void* pWindow = webView.window().value();
@@ -124,13 +129,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     try {
         webView.set_title(g_WindowClassName);
-        webView.set_size(800, 600, WEBVIEW_HINT_MIN);
+        webView.set_size(640, 480, WEBVIEW_HINT_MIN);
         webView.set_size(800, 600, WEBVIEW_HINT_NONE);
 
         webView.navigate("http://127.0.0.1:56729/index.html");
 
         g_MainWindow.initialize(hWnd, 800, 600);
-
         while (!bIsDone)
         {
             MSG msg;
