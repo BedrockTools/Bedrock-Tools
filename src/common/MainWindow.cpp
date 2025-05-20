@@ -1,6 +1,5 @@
 #include "MainWindow.hpp"
-#include <vector>
-#include <fstream>
+
 static std::vector<char> loadShader(const char* filename) {
     std::ifstream file(filename, std::ios::binary);
     return {
@@ -32,13 +31,22 @@ bgfx::VertexBufferHandle vertexBuffer;
 uint16_t indices[] = { 0, 1, 2, 1, 3, 2 };
 bgfx::IndexBufferHandle indexBuffer;
 
-void MainWindow::initialize(void* pWindow, int width, int height)
+void MainWindow::initialize(const std::shared_ptr<webview::webview>& webview, int width, int height)
 {
     this->m_Width = width;
     this->m_Height = height;
+    this->m_Webview = webview;
+
+    {
+        webview->set_title("Bedrock Tools");
+        webview->set_size(640, 480, WEBVIEW_HINT_MIN);
+        webview->set_size(width, height, WEBVIEW_HINT_NONE);
+
+        webview->navigate("http://127.0.0.1:56729/index.html");
+    };
 
     bgfx::PlatformData platformData;
-    platformData.nwh = pWindow;
+    platformData.nwh = webview->window().value();
 
     bgfx::Init bgfxInit;
 #ifdef _WIN32 // Windows (x64 and x86)
@@ -113,8 +121,9 @@ void MainWindow::update(int width, int height)
     bgfx::submit(0, program);
 };
 
-void MainWindow::terminate()
+void MainWindow::terminate() const
 {
+    this->m_Webview->terminate();
     bgfx::shutdown();
 };
 

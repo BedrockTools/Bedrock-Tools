@@ -3,7 +3,7 @@ project(${NAME} VERSION ${PROJECT_VERSION})
 
 file(GLOB_RECURSE SRC "./*.cpp" "./*.hpp")
 add_library(${NAME} ${SRC})
-target_link_libraries(${NAME} PRIVATE bgfx http-server)
+target_link_libraries(${NAME} PUBLIC webview::core bgfx http-server)
 
 # Copying assets
 set(SRC_ASSETS_DIR ${CMAKE_SOURCE_DIR}/assets)

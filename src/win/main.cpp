@@ -5,16 +5,17 @@
 #include <vector>
 #include <cstdlib>
 
-#include "src/common/MainWindow.hpp"
-#include "src/common/rendering/DirectX11.hpp"
-#include <webview/webview.h>
-
+#include "src/common/AppUI.hpp"
 #if DEBUG_BUILD
     #include <imgui/imgui.h>
     #include <imgui/backends/imgui_impl_dx11.h>
     #include <imgui/backends/imgui_impl_win32.h>
 #endif
 
+#include <webview/webview.h>
+
+#include "src/common/rendering/DirectX11.hpp"
+#include "src/common/MainWindow.hpp"
 inline MainWindow g_MainWindow{};
 
 static LRESULT CALLBACK WebViewProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
@@ -87,7 +88,6 @@ static void DebugWindow(HINSTANCE hInstance, HINSTANCE hPrevInstance, bool* bIsD
 
 LPCTSTR g_WindowClassName = TEXT("Bedrock Tools");
 LPCTSTR g_DebugClassName = TEXT("Bedrock Tools - Debug");
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     const char* appData = std::getenv("APPDATA");
@@ -117,24 +117,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         AppUI::serveHttp();
     }).detach();
 
-    webview::webview webView{
-        true, nullptr,
-        std::format("{}\\com.xkingdark.bedrocktools", localAppData),
-        WebViewProc, WidgetProc
-    };
-
-    void* pWidget = webView.widget().value();
-    void* pWindow = webView.window().value();
-    auto hWnd = static_cast<HWND>(pWindow);
-
+    webview::webview::set_data_path(std::format("{}\\com.xkingdark.bedrocktools", localAppData));
+    webview::webview::set_window_style(WS_POPUPWINDOW);
     try {
-        webView.set_title(g_WindowClassName);
-        webView.set_size(640, 480, WEBVIEW_HINT_MIN);
-        webView.set_size(800, 600, WEBVIEW_HINT_NONE);
+        g_MainWindow.initialize(std::make_shared<webview::webview>(
+            true, nullptr, false,
+            WebViewProc, WidgetProc
+        ), 800, 600);
 
-        webView.navigate("http://127.0.0.1:56729/index.html");
-
-        g_MainWindow.initialize(hWnd, 800, 600);
+        //void* pWidget = g_MainWindow.getWebview()->widget().value();
+        void* pWindow = g_MainWindow.getWebview()->window().value();
         while (!bIsDone)
         {
             MSG msg;
@@ -152,6 +144,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                 };
             };
 
+            auto hWnd = static_cast<HWND>(pWindow);
         #if DEBUG_BUILD
             SetWindowTextA(hWnd, g_MainWindow.getWindowTitle().c_str());
         #endif
@@ -171,9 +164,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 _cleanup:
     bIsDone = true;
-
-    MainWindow::terminate();
-    webView.terminate();
+    g_MainWindow.terminate();
 
     std::cout << "Quit correctly." << std::endl;
     return 0;

@@ -1,6 +1,95 @@
+::-webkit-scrollbar { width: 0; }
 body {
-    font-family: NotoSans;
+    font-family: MinecraftSeven;
+    margin: 0;
+    width: 100%;
+    overflow-x: hidden;
 }
+
+:root {
+    --baseFontSize: 7.5px;
+    --base2Scale: 2px;
+    --base2ScaleNeg: -2px;
+    --base1Scale: 1px;
+    --base1ScaleNeg: -1px;
+}
+#root {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+}
+
+.background {
+    z-index: -2;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: url(../assets/dirt.png);
+}
+
+.backdrop {
+    z-index: -1;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+    background-color: black;
+    pointer-events: all;
+}
+
+.header {
+    margin-top: -6px;
+    position: relative;
+    height: 2.7rem;
+    z-index: 1000;
+}
+.headerShadow { height: calc(2*var(--base2Scale)); background-color: #b1b2b5; }
+.header_ {
+    top: 0rem;
+    width: 100%;
+    margin-top: -6px;
+    display: block;
+    position: fixed;
+    -webkit-app-region: drag;
+    background-color: #e6e8eb;
+}
+.header__ {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.headerButton {
+    width: 1.5rem;
+    height: 1.5rem;
+    text-align: center;
+    align-content: center;
+    margin-top: 0.4rem;
+    margin-right: 0.4rem;
+    margin-bottom: 0.4rem;
+    margin-left: 0.4rem;
+    cursor: pointer;
+    user-select: none;
+}
+.headerButton:hover { background-color: #f4f6f9; }
+.headerButton:active { background-color: #d0d1d4; }
+.headerButton > img {
+    height: calc(8*var(--base2Scale));
+    width: calc(4*var(--base2Scale));
+    margin-top: var(--base2Scale);
+    filter: invert(0);
+}
+.headerTitle {
+    align-content: center;
+    width: 100%;
+    height: 2.4rem;
+    padding-left: 6rem;
+    padding-right: 6rem;
+    text-align: center;
+    user-select: none;
+    pointer-events: none;
+}
+.headerTitle_ { font-size: 16px; font-family: MinecraftTen; }
+.disabledElement .elementTitle { color: #d0d1d4; }
 
 /* Fonts */
 @font-face {
